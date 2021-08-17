@@ -1,6 +1,6 @@
 {
-  "name": "simple-electron-react",
-  "productName": "React Electron App",
+  "name": "buglogger",
+  "productName": "Bug Logger",
   "version": "1.0.0",
   "description": "Simple boilerplate for building Electron apps with React",
   "license": "MIT",
@@ -21,7 +21,9 @@
     "postpackage": "electron-packager ./ --out=./release-builds"
   },
   "dependencies": {
+    "bootstrap": "^5.1.0",
     "react": "^16.13.1",
+    "react-bootstrap": "^1.6.1",
     "react-dom": "^16.13.1"
   },
   "devDependencies": {
