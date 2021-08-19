@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Badge } from 'react-bootstrap';
+import Moment from 'react-moment';
 
 const LogItem = ({ log }) => {
   const { priority, text, user, created } = log;
@@ -20,7 +21,7 @@ const LogItem = ({ log }) => {
       </td>
       <td>{text}</td>
       <td>{user}</td>
-      <td>{created}</td>
+      <td><Moment format='MMMM Do YYYY, h:mm:ss a'>{new Date(created)}</Moment></td>
       <td>
         <Button variant='danger' size='sm'>
           x
