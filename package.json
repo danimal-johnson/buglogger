@@ -2,7 +2,7 @@
   "name": "buglogger",
   "productName": "Bug Logger",
   "version": "1.0.0",
-  "description": "Simple boilerplate for building Electron apps with React",
+  "description": "Bug logging app using Electron, React, MongoDB, Atlas...",
   "license": "MIT",
   "engines": {
     "node": ">=9.0.0",
@@ -22,7 +22,9 @@
   },
   "dependencies": {
     "bootstrap": "^5.1.0",
+    "dotenv": "^10.0.0",
     "moment": "^2.29.1",
+    "mongoose": "^6.0.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.6.1",
     "react-dom": "^16.13.1",
