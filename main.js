@@ -1,7 +1,8 @@
 require('dotenv').config();
 const path = require('path');
 const url = require('url');
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
+const Log = require('./models/Log');
 const connectDB = require('./config/db');
 
 // Connect to DB
@@ -29,7 +30,7 @@ function createMainWindow() {
 		},
 	})
 
-	let indexPath
+	let indexPath;
 
 	if (isDev && process.argv.indexOf('--noDevServer') === -1) {
 		indexPath = url.format({
@@ -46,11 +47,11 @@ function createMainWindow() {
 		})
 	}
 
-	mainWindow.loadURL(indexPath)
+	mainWindow.loadURL(indexPath);
 
 	// Don't show until we are ready and loaded
 	mainWindow.once('ready-to-show', () => {
-		mainWindow.show()
+		mainWindow.show();
 
 		// Open devtools if dev
 		if (isDev) {
@@ -62,26 +63,38 @@ function createMainWindow() {
 			installExtension(REACT_DEVELOPER_TOOLS).catch((err) =>
 				console.log('Error loading React DevTools: ', err)
 			)
-			mainWindow.webContents.openDevTools()
+			mainWindow.webContents.openDevTools();
 		}
 	})
 
 	mainWindow.on('closed', () => (mainWindow = null))
 }
 
-app.on('ready', createMainWindow)
+app.on('ready', createMainWindow);
+
+ipcMain.on('logs:load', sendLogs);
+
+async function sendLogs(event, logs) {
+	try {
+		const logs = await Log.find().sort({created: 1});
+		console.log('Logs:', logs);
+		mainWindow.webContents.send('logs:get', JSON.stringify(logs));
+	} catch (err) {
+		console.log('Error loading logs:', err);
+	}
+}
 
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') {
-		app.quit()
+		app.quit();
 	}
 })
 
 app.on('activate', () => {
 	if (mainWindow === null) {
-		createMainWindow()
+		createMainWindow();
 	}
 })
 
 // Stop error
-app.allowRendererProcessReuse = true
+app.allowRendererProcessReuse = true;
