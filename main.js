@@ -74,6 +74,24 @@ app.on('ready', createMainWindow);
 
 ipcMain.on('logs:load', sendLogs);
 
+ipcMain.on('logs:add', async (e, item) => {
+	try {
+		await Log.create(item);
+		sendLogs();
+	} catch (err) {
+		console.log('Error adding log:', err.message);
+	}
+});
+
+ipcMain.on('logs:delete', async(e, _id) => {
+	try {
+		await Log.findByIdAndDelete(_id);
+		sendLogs();
+	} catch (err) {
+		console.log('Error deleting log:', err.message);
+	}
+});
+
 async function sendLogs(event, logs) {
 	try {
 		const logs = await Log.find().sort({created: 1});

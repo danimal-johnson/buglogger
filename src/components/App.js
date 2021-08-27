@@ -6,36 +6,13 @@ import AddLogItem from './AddLogItem';
 import { ipcRenderer } from 'electron';
 
 const App = () => {
-	// const [logs, setLogs] = useState([
-	// 	{
-	// 		_id: 1,
-	// 		text: 'This is log one',
-	// 		priority: 'low',
-	// 		user: 'Brad',
-	// 		created: new Date().toString(),
-	// 	},
-	// 	{
-	// 		_id: 2,
-	// 		text: 'This is log two',
-	// 		priority: 'moderate',
-	// 		user: 'Brad',
-	// 		created: new Date().toString(),
-	// 	},
-	// 	{
-	// 		_id: 3,
-	// 		text: 'This is log three',
-	// 		priority: 'high',
-	// 		user: 'Kate',
-	// 		created: new Date().toString(),
-	// 	},
-	// ]);
 	const [logs, setLogs] = useState([]);
 	const [alert, setAlert] = useState({
 		show: false,
 		message: '',
 		variant: 'success',
 	});
-	
+
 	useEffect(() => {
 		ipcRenderer.send('logs:load');
 		ipcRenderer.on('logs:get', (event, data) => {
@@ -49,16 +26,23 @@ const App = () => {
 			return;
 		}
 
+		ipcRenderer.send('logs:add', {
+			text: item.text,
+			priority: item.priority,
+			user: item.user,
+			created: new Date()
+		});
+
 		item._id = Math.floor(Math.random() * 90000) + 10000;
 		item.created = new Date().toString();
 		console.log(item);
 		setLogs([...logs,	item]);
-		showAlert('Log added successfully');
+		showAlert('Log added successfully'); // How do we know if we have a success or failure?
 	}
 
 	function deleteItem(_id) {
-		setLogs(logs.filter(log => log._id !== _id));
-		showAlert('Log removed successfully');
+		ipcRenderer.send('logs:delete', _id);
+		showAlert('Log removed successfully'); // How do we know if we have a success or failure?
 	}
 
 	function showAlert(message, variant = 'success', seconds = 3) {
