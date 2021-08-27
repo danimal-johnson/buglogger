@@ -18,6 +18,10 @@ const App = () => {
 		ipcRenderer.on('logs:get', (event, data) => {
 			setLogs(JSON.parse(data));
 		});
+		ipcRenderer.on('logs:clear', () => {
+			setLogs([]);
+			showAlert('Logs cleared', 'success');
+			});
 	}, []);
 
 	function addItem(item) {
