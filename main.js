@@ -62,7 +62,7 @@ function createMainWindow() {
 			} = require('electron-devtools-installer')
 
 			installExtension(REACT_DEVELOPER_TOOLS).catch((err) =>
-				console.log('Error loading React DevTools: ', err)
+				console.error('Error loading React DevTools: ', err)
 			)
 			mainWindow.webContents.openDevTools();
 		}
@@ -115,7 +115,7 @@ ipcMain.on('logs:add', async (e, item) => {
 		await Log.create(item);
 		sendLogs();
 	} catch (err) {
-		console.log('Error adding log:', err.message);
+		console.error('Error adding log:', err.message);
 	}
 });
 
@@ -124,7 +124,7 @@ ipcMain.on('logs:delete', async(e, _id) => {
 		await Log.findByIdAndDelete(_id);
 		sendLogs();
 	} catch (err) {
-		console.log('Error deleting log:', err.message);
+		console.error('Error deleting log:', err.message);
 	}
 });
 
@@ -134,17 +134,16 @@ async function clearLogs() {
 		mainWindow.webContents.send('logs:clear');
 		sendLogs();
 	} catch (err) {
-		console.log('Error deleting logs:', err.message);
+		console.error('Error deleting logs:', err.message);
 	}
 }
 
 async function sendLogs(event, logs) {
 	try {
 		const logs = await Log.find().sort({created: 1});
-		console.log('Logs:', logs);
 		mainWindow.webContents.send('logs:get', JSON.stringify(logs));
 	} catch (err) {
-		console.log('Error loading logs:', err);
+		console.error('Error loading logs:', err);
 	}
 }
 
